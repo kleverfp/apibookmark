@@ -7,8 +7,26 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {}
-  signin() {
-    return { msg: 'sign' };
+  async signin(authDto: AuthDto) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: authDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+
+    const pwMatches = await argon.verify(user.hash, authDto.password);
+
+    if (!pwMatches) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+
+    delete user.hash;
+
+    return user;
   }
 
   async signup(authDto: AuthDto) {
