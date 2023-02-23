@@ -12,8 +12,8 @@ export class AuthController {
   }
 
   @Post('signin')
-  signin() {
-    const response = this.authService.signin();
+  signin(@Body() authDto: AuthDto) {
+    const response = this.authService.signin(authDto);
 
     return response;
   }
