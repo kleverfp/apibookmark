@@ -1,10 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 
 @Controller('users')
 export class UserController {
+  @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  getMe(request: Request, response: Response) {
-    return response.json({ msg: 'user ok' });
+  getMe() {
+    return { msg: 'user ok' };
   }
 }

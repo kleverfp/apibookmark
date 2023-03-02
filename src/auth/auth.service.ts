@@ -31,9 +31,7 @@ export class AuthService {
       throw new ForbiddenException('Invalid credentials');
     }
 
-    delete user.hash;
-
-    return user;
+    return this.signToken(user.id, user.email);
   }
 
   async signup(authDto: AuthDto) {
